@@ -134,12 +134,12 @@ npm run build # produce release binaries
 
 ## Download
 
-Pre-built binaries are generated automatically on every push to `main`.
+Pre-built binaries are available on the [**Releases**](../../releases/latest) page.
 
-Go to the [**Actions tab**](../../actions) → latest run → **Artifacts**:
-
-| Artifact | Platform |
+| File | Platform |
 |---|---|
-| `TaskTopo-macOS-Universal` | macOS (Apple Silicon + Intel) |
-| `TaskTopo-Windows` | Windows 10 / 11 (x64) |
-| `TaskTopo-Linux` | Ubuntu/Debian — `.AppImage` + `.deb` |
+| `TaskTopo_*_universal.dmg` | macOS (Apple Silicon + Intel) |
+| `TaskTopo_*_x64-setup.exe` | Windows 10 / 11 (x64) |
+| `TaskTopo_*.AppImage` / `TaskTopo_*.deb` | Ubuntu/Debian Linux |
+
+Releases are published automatically when a `v*` tag is pushed (e.g. `git tag v0.1.0 && git push --tags`).
