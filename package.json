@@ -1,0 +1,16 @@
+{
+  "name": "task-topo",
+  "version": "0.1.0",
+  "description": "智能任务规划器 — 拓扑排序驱动的任务调度工具",
+  "scripts": {
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "tauri": "tauri"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2"
+  }
+}

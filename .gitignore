@@ -1,0 +1,12 @@
+# Rust / Tauri build output
+src-tauri/target/
+
+# Node
+node_modules/
+
+# macOS
+.DS_Store
+
+# Preview server helper (local only)
+serve.py
+.claude/

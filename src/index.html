@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskTopo</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ── Title Bar ─────────────────────────────────────────── -->
+  <header id="titlebar">
+    <div class="traffic-lights">
+      <div class="tl close"></div>
+      <div class="tl min"></div>
+      <div class="tl max"></div>
+    </div>
+    <div class="brand">
+      <div class="brand-logo">⬡</div>
+      <span class="brand-name">TaskTopo</span>
+    </div>
+    <div class="stats-row">
+      <div class="stat-pill">
+        <div class="stat-dot purple"></div>
+        <span class="stat-pill-label">Tasks</span>
+        <span class="stat-pill-value" id="stat-total">0</span>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-dot green"></div>
+        <span class="stat-pill-label">Done</span>
+        <span class="stat-pill-value" id="stat-done">0</span>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-dot amber"></div>
+        <span class="stat-pill-label">Urgent</span>
+        <span class="stat-pill-value" id="stat-urgent">0</span>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-dot red"></div>
+        <span class="stat-pill-label">Overdue</span>
+        <span class="stat-pill-value" id="stat-overdue">0</span>
+      </div>
+      <div class="progress-pill">
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <span class="progress-pct" id="progress-pct">0%</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── App Body ───────────────────────────────────────────── -->
+  <div class="app-body">
+
+    <!-- Left Sidebar -->
+    <aside id="sidebar">
+
+      <!-- Add / Edit Task Form -->
+      <div class="sidebar-top">
+        <div class="form-title">
+          <span id="form-icon">✦</span>
+          <span id="form-heading">New Task</span>
+        </div>
+        <form id="task-form" autocomplete="off">
+          <div class="field">
+            <label for="f-name">Name<span class="required">*</span></label>
+            <input type="text" id="f-name" placeholder="Task name…" required />
+          </div>
+          <div class="field">
+            <label for="f-desc">Description</label>
+            <textarea id="f-desc" rows="2" placeholder="Optional description…"></textarea>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="f-deadline">Deadline</label>
+              <input type="date" id="f-deadline" />
+            </div>
+            <div class="field">
+              <label for="f-hours">Hours (h)</label>
+              <input type="number" id="f-hours" min="0.5" step="0.5" value="2" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Willingness</label>
+            <div class="wl-group">
+              <label class="wl-option high">
+                <input type="radio" name="wl" value="high" />
+                <div class="wl-dot"></div>
+                <span>High</span>
+              </label>
+              <label class="wl-option mid">
+                <input type="radio" name="wl" value="medium" checked />
+                <div class="wl-dot"></div>
+                <span>Med</span>
+              </label>
+              <label class="wl-option low">
+                <input type="radio" name="wl" value="low" />
+                <div class="wl-dot"></div>
+                <span>Low</span>
+              </label>
+            </div>
+          </div>
+          <button type="submit" class="btn-primary" id="form-submit-btn">+ Add Task</button>
+        </form>
+      </div>
+
+      <!-- Task List -->
+      <div class="sidebar-tasks">
+        <div class="section-label">
+          All Tasks
+          <span class="task-count-badge" id="task-count">0</span>
+        </div>
+        <div id="task-list"></div>
+      </div>
+    </aside>
+
+    <!-- Main Panel -->
+    <main id="main">
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="schedule">
+          <span class="tab-icon">📋</span> Schedule
+        </button>
+        <button class="tab-btn" data-tab="graph">
+          <span class="tab-icon">🔗</span> Dependency Graph
+        </button>
+      </div>
+
+      <!-- Schedule Tab -->
+      <div class="tab-content active" id="tab-schedule">
+        <div class="content-toolbar">
+          <span class="content-hint">⚡ Topological sort + priority scoring — edit dependencies in the graph, then run</span>
+          <button class="btn-run" id="btn-refresh">▶ Run Algorithm</button>
+        </div>
+        <div id="schedule-list"></div>
+      </div>
+
+      <!-- Graph Tab -->
+      <div class="tab-content" id="tab-graph">
+        <div class="graph-toolbar">
+          <div class="legend-item"><div class="legend-dot high"></div>High</div>
+          <div class="legend-item"><div class="legend-dot mid"></div>Medium</div>
+          <div class="legend-item"><div class="legend-dot low"></div>Low</div>
+          <div class="legend-item"><div class="legend-dot done"></div>Done</div>
+          <div class="graph-toolbar-right">
+            <button class="btn-connect" id="btn-connect-mode">⛓ Connect Deps</button>
+            <button class="btn-run" id="btn-run-algo">▶ Run Algorithm</button>
+          </div>
+        </div>
+        <div id="connect-hint" class="connect-hint hidden"></div>
+        <div id="graph-container">
+          <svg id="dependency-graph" width="100%" height="100%"></svg>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ── Dependency Modal ──────────────────────────────────── -->
+  <div id="dep-modal" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Manage Dependencies</h3>
+        <button class="modal-close" id="modal-close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-hint">
+          Select which tasks must be completed <em>before</em> <strong id="modal-task-name"></strong> can start:
+        </p>
+        <div id="dep-list"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-sm" id="modal-cancel">Cancel</button>
+        <button class="btn-primary" id="modal-save">Save Dependencies</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Toast ─────────────────────────────────────────────── -->
+  <div id="toast" class="hidden"></div>
+
+  <script src="main.js"></script>
+</body>
+</html>
