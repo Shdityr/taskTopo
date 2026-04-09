@@ -12,11 +12,8 @@ jobs:
       matrix:
         include:
           - os: macos-latest
-            target: aarch64-apple-darwin
-            label: macOS-Apple-Silicon
-          - os: macos-13
-            target: x86_64-apple-darwin
-            label: macOS-Intel
+            target: universal-apple-darwin
+            label: macOS-Universal
           - os: windows-latest
             target: x86_64-pc-windows-msvc
             label: Windows
@@ -38,7 +35,7 @@ jobs:
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: ${{ matrix.target }}
+          targets: ${{ matrix.os == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || matrix.target }}
 
       - name: Rust cache
         uses: swatinem/rust-cache@v2
@@ -68,11 +65,11 @@ jobs:
           args: --target ${{ matrix.target }}
 
       - name: Upload macOS artifact
-        if: startsWith(matrix.os, 'macos')
+        if: matrix.os == 'macos-latest'
         uses: actions/upload-artifact@v4
         with:
-          name: TaskTopo-${{ matrix.label }}
-          path: src-tauri/target/${{ matrix.target }}/release/bundle/dmg/*.dmg
+          name: TaskTopo-macOS-Universal
+          path: src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg
           if-no-files-found: warn
 
       - name: Upload Windows artifact
