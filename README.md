@@ -8,10 +8,11 @@
 ## Screenshots
 
 ### Schedule View
-![Schedule view]
+![Schedule view](screenshots/schedule-view.png)
 
 ### Dependency Graph
-![Dependency graph]
+![Dependency graph](screenshots/dependency-graph-1.png)
+![Dependency graph](screenshots/dependency-graph-2.png)
 
 ---
 
